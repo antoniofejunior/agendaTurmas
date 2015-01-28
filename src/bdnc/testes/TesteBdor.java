@@ -20,55 +20,87 @@ import java.util.logging.Logger;
  */
 public class TesteBdor implements Teste {
 
-   private DAO<Aluno> dao = new AlunoDAOSQL();
-   private DAO<Turma> dao2 = new TurmaDAOSQL();
+    private final DAO<Aluno> daoAlunos = new AlunoDAOSQL();
+    private final DAO<Turma> daoTurma = new TurmaDAOSQL();
+    private final int fimTurma = 10;
+    private final int fimAlunos = 10;
+    private long tempInicio = 0;
+    private final int ini = 1;
+
+    private void mensagen(long tempofimal, String msg) {
+        System.out.println("================================================================");
+        System.out.println("            " + msg);
+        System.out.println("            Tempo decorrido: " + (tempofimal - tempInicio) / 1000f + "s.");
+        System.out.println("            Tempo decorrido: " + (tempofimal - tempInicio) + "ms.");
+        System.out.println("================================================================\n");
+    }
 
     @Override
     public void salvar() {
-        int n = 1;
-        Turma turma = new Turma(n, "" + (2014.1 + n / 10), "turma " + n);
-        try {
-            dao2.cadastrar(turma);            
-            dao.cadastrar(new Aluno(n, "aluno " + n, turma));
-            System.out.println("Aluno Cadastrado com sucesso!!");
-        } catch (SQLException ex) {
-            Logger.getLogger(TesteBdoo.class.getName()).log(Level.SEVERE, null, ex);
+        tempInicio = System.currentTimeMillis();
+        int aux = 0;
+        for (int n = ini; n <= fimTurma; n++) {
+            Turma turma = new Turma(n, "" + (2014.1 + n / 10), "turma " + n);
+            try {
+                daoTurma.cadastrar(turma);
+
+                for (int m = ini; m <= fimAlunos; m++) {
+                    daoAlunos.cadastrar(new Aluno(m + aux, "aluno " + m + aux, turma));
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(TesteBdoo.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            aux += fimAlunos;
         }
+        this.mensagen(System.currentTimeMillis(), "Alunos Cadastrados com sucesso!!");
     }
 
     @Override
     public void atalizar() {
-        int n = 1;
-        Turma turma = new Turma(n, "" + (2014.1 + n / 10), "turma nova" + n);
-        try {
-            
-            dao2.atualizar(turma);
-            dao.atualizar(new Aluno(n, "aluno novo " + n, turma));
-            System.out.println("Aluno atualzado com sucesso!!");
-        } catch (SQLException ex) {
-            Logger.getLogger(TesteBdoo.class.getName()).log(Level.SEVERE, null, ex);
+
+        tempInicio = System.currentTimeMillis();
+        int aux = 0;
+        for (int n = ini; n <= fimTurma; n++) {
+            Turma turma = new Turma(n, "" + (2014.1 + n / 10), "turma nova " + n);
+            try {
+                daoTurma.atualizar(turma);
+                for (int m = ini; m <= fimTurma; m++) {
+                    daoAlunos.atualizar(new Aluno(m+aux, "aluno novo " + m+aux, turma));
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(TesteBdoo.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            aux += fimAlunos;
         }
+        this.mensagen(System.currentTimeMillis(), "Alunos Atualizados com sucesso!!");
     }
 
     @Override
     public void buscar() {
-        try {
-//            System.out.println(dao.listar());
-            System.out.println(dao.buscar(1) + " " + dao2.buscar(1));
-        } catch (SQLException ex) {
-            Logger.getLogger(TesteBdoo.class.getName()).log(Level.SEVERE, null, ex);
+        tempInicio = System.currentTimeMillis();
+        for (int n = ini; n <= fimTurma; n++) {
+            try {
+                daoAlunos.buscar(n);
+            } catch (SQLException ex) {
+                Logger.getLogger(TesteBdoo.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
+        this.mensagen(System.currentTimeMillis(), "Alunos listados com sucesso!!");
     }
 
     @Override
     public void remover() {
+        tempInicio = System.currentTimeMillis();
         try {
-            dao.remover(dao.buscar(1));
-            dao2.remover(dao2.buscar(1));
-            System.out.println("Aluno removido com sucesso!!");
+            for (int n = ini; n <= fimAlunos*fimTurma; n++) {
+                daoAlunos.removerById(n);
+            }
+            for (int m = ini; m <= fimTurma; m++) {
+                daoTurma.removerById(m);
+            }
         } catch (SQLException ex) {
             Logger.getLogger(TesteBdoo.class.getName()).log(Level.SEVERE, null, ex);
         }
+        this.mensagen(System.currentTimeMillis(), "Alunos removidos com sucesso!!");
     }
-
 }

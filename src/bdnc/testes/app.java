@@ -20,8 +20,8 @@ public class app {
         teste.remover();
     }
     public static void main(String[] args) {
-//        System.out.println("Sequencia de teste bdoo banco oracle");
-//        sequenciatestes(new TesteBdoo());
+        System.out.println("Sequencia de teste bdoo banco oracle");
+        sequenciatestes(new TesteBdoo());
         System.out.println("Sequencia de teste bdr banco oracle");
         sequenciatestes(new TesteBdor());
     }

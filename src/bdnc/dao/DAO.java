@@ -17,6 +17,7 @@ public interface DAO<T> {
     
     public void cadastrar(T object) throws SQLException;
     public void remover(T object)throws SQLException;
+    public void removerById(Object id)throws SQLException;
     public void atualizar(T object)throws SQLException;
     public List<T> listar()throws SQLException;
     public T buscar(Object id)throws SQLException;

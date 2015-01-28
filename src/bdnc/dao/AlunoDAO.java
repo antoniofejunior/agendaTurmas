@@ -132,4 +132,22 @@ public class AlunoDAO implements DAO<Aluno> {
             ConectonFactory.close(connection);
         }
     }
+    
+    
+    @Override
+    public void removerById(Object id) throws SQLException {
+        Connection connection = null;
+        PreparedStatement pstmt = null;
+        try {
+            connection = ConectonFactory.getOracleConnection();
+
+            pstmt = connection.prepareStatement("DELETE ALUNOS a WHERE a.matricula = ?");
+            pstmt.setInt(1,(int) id);
+            pstmt.execute();
+
+        } finally {
+            ConectonFactory.close(pstmt);
+            ConectonFactory.close(connection);
+        }
+    }
 }

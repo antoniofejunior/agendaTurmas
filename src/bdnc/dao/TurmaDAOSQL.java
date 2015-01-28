@@ -122,4 +122,21 @@ public class TurmaDAOSQL implements DAO<Turma> {
             ConectonFactory.close(connection);
         }
     }
+
+    @Override
+    public void removerById(Object id) throws SQLException {
+        Connection connection = null;
+        PreparedStatement pstmt = null;
+        try {
+            connection = ConectonFactory.getOracleConnection();
+
+            pstmt = connection.prepareStatement("DELETE TURMASQL WHERE id = ?");
+            pstmt.setInt(1, (int)id);
+            pstmt.execute();
+
+        } finally {
+            ConectonFactory.close(pstmt);
+            ConectonFactory.close(connection);
+        }
+    }
 }
